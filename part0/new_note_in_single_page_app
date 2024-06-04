@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant user
+    participant browser
+    participant server
+
+    user->>browser: type a note to form input then click save button to submit to add new note
+    browser->>server: POST an Object have content and date to https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    activate server
+    server-->> browser: response an object have a message:"note created"
+
+    Note right of browser: The browser executes the callback function that renders the notes
