@@ -13,30 +13,39 @@ const Button = (props) => {
 
 const StatisticLine = (props) => {
     return (
-        <p>
-            {props.text} {props.value}
-        </p>
+        <tr>
+            <td>{props.text}</td>
+            <td>{props.value}</td>
+        </tr>
     );
 };
 
 const Satistics = (props) => {
     const { good, neutral, bad } = props;
     return (
-        <>
-            <h1>statistics</h1>
-            {good + neutral + bad === 0 ? (
-                <StatisticLine text='No feedback given' value='' />
-            ) : (
-                <>
-                    <StatisticLine text='good' value={good} />
-                    <StatisticLine text='neutral' value={neutral} />
-                    <StatisticLine text='bad' value={bad} />
-                    <StatisticLine text='all' value={good + neutral + bad} />
-                    <StatisticLine text='average' value={(good - bad) / (good + neutral + bad) || 0} />
-                    <StatisticLine text='positive' value={`${(good / (good + neutral + bad)) * 100 || 0} %`} />
-                </>
-            )}
-        </>
+        <table>
+            <thead>
+                <tr>
+                    <td>
+                        <h1>statistics</h1>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                {good + neutral + bad === 0 ? (
+                    <StatisticLine text='No feedback given' value='' />
+                ) : (
+                    <>
+                        <StatisticLine text='good' value={good} />
+                        <StatisticLine text='neutral' value={neutral} />
+                        <StatisticLine text='bad' value={bad} />
+                        <StatisticLine text='all' value={good + neutral + bad} />
+                        <StatisticLine text='average' value={(good - bad) / (good + neutral + bad) || 0} />
+                        <StatisticLine text='positive' value={`${(good / (good + neutral + bad)) * 100 || 0} %`} />
+                    </>
+                )}
+            </tbody>
+        </table>
     );
 };
 
