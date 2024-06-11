@@ -1,4 +1,4 @@
-const Header = ({ name }) => <h1>{name}</h1>;
+const Header = ({ name }) => <h2>{name}</h2>;
 const Part = ({ part }) => (
     <p>
         {part.name} {part.exercises}
@@ -23,7 +23,7 @@ const Content = ({ parts }) => {
 
 const Course = ({ course }) => {
     return (
-        <div key={course.id}>
+        <div>
             <Header name={course.name} />
             <Content parts={course.parts} />
         </div>
