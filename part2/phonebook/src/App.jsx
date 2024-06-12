@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import PersonForm from './PersonForm';
+import Person from './Person';
+import Filter from './Filter';
 
 const App = () => {
     const [persons, setPersons] = useState([
@@ -14,12 +17,12 @@ const App = () => {
 
     const addNew = (event) => {
         event.preventDefault();
-        if (persons.find((person) => person.name === newName)) {
+        if (persons.find((person) => person.name.toLowerCase() === newName.toLowerCase())) {
             alert(`${newName} is already added to phonebook`);
             return;
         }
         const newList = [...persons];
-        newList.push({ name: newName, number: newNumber });
+        newList.push({ name: newName, number: newNumber, id: persons.length + 1 });
         setPersons(newList);
         setFiltPersons(newList);
         setNewName('');
@@ -43,29 +46,17 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <div>
-                filter shown with: <input onChange={handleFiltInput} value={filtPerson} />
-            </div>
-            <h2>add a new</h2>
-            <form onSubmit={addNew}>
-                <div>
-                    name: <input onChange={handleNameInput} value={newName} />
-                </div>
-                <div>
-                    number: <input onChange={handleNumberInput} value={newNumber} />
-                </div>
-                <div>
-                    <button type='submit'>add</button>
-                </div>
-            </form>
-            <h2>Numbers</h2>
-            {filtPersons.map((person) => {
-                return (
-                    <p key={person.id}>
-                        {person.name}-{person.number}
-                    </p>
-                );
-            })}
+            <Filter onHandleFiltInput={handleFiltInput} filtPerson={filtPerson} />
+            <h3>Add a new</h3>
+            <PersonForm
+                onAddNew={addNew}
+                onHandleNameInput={handleNameInput}
+                onHandleNumberInput={handleNumberInput}
+                newName={newName}
+                newNumber={newNumber}
+            />
+            <h3>Numbers</h3>
+            <Person persons={filtPersons} />
         </div>
     );
 };
