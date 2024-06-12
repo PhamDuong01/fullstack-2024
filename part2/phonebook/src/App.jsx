@@ -6,6 +6,10 @@ const App = () => {
 
     const addNumber = (event) => {
         event.preventDefault();
+        if (persons.find((person) => person.name === newName)) {
+            alert(`${newName} is already added to phonebook`);
+            return;
+        }
         const newList = [...persons];
         newList.push({ name: newName });
         setPersons(newList);
