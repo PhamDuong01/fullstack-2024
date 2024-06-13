@@ -1,8 +1,14 @@
-const Person = ({ persons }) =>
-    persons.map((person) => (
-        <p key={person.id}>
-            {person.name}-{person.number}
-        </p>
+const Person = ({ persons, onDeleteClick }) => {
+    return persons.map((person) => (
+        <div key={person.id}>
+            <p>
+                {person.name}-{person.number}
+            </p>
+            <button data-id={person.id} onClick={onDeleteClick}>
+                delete
+            </button>
+        </div>
     ));
+};
 
 export default Person;

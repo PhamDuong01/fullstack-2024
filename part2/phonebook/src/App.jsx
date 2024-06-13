@@ -4,6 +4,7 @@ import Person from './Person';
 import Filter from './Filter';
 import { useEffect } from 'react';
 import axios from 'axios';
+import phonebookServices from './services/phonebook.js';
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -12,13 +13,15 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('');
     const [filtPerson, setFiltPerson] = useState('');
 
+    const getDAta = async () => {
+        const res = await phonebookServices.getAll();
+        setPersons(res.data);
+        setFiltPersons(res.data);
+    };
+
     useEffect(() => {
-        axios.get('http://localhost:3001/persons').then((response) => {
-            const data = response.data;
-            setPersons(data);
-            setFiltPersons(data);
-        });
-    }, []);
+        getDAta();
+    }, [persons]);
 
     const addNew = (event) => {
         event.preventDefault();
@@ -27,7 +30,7 @@ const App = () => {
             return;
         }
         const newList = [...persons];
-        const newPersonAdd = { name: newName, number: newNumber, id: persons.length + 1 };
+        const newPersonAdd = { name: newName, number: newNumber, id: `${persons.length + 1}` };
         newList.push(newPersonAdd);
         axios.post('http://localhost:3001/persons', newPersonAdd).then(() => {
             setPersons(newList);
@@ -51,6 +54,14 @@ const App = () => {
         setFiltPersons(filterList);
     };
 
+    const handleDelete = (event) => {
+        if (window.confirm('Are you sure you want to delete ?')) {
+            const id = event.target.dataset.id;
+            phonebookServices.delete(id);
+            getDAta();
+        }
+    };
+
     return (
         <div>
             <h2>Phonebook</h2>
@@ -64,7 +75,7 @@ const App = () => {
                 newNumber={newNumber}
             />
             <h3>Numbers</h3>
-            <Person persons={filtPersons} />
+            <Person persons={filtPersons} onDeleteClick={handleDelete} />
         </div>
     );
 };
