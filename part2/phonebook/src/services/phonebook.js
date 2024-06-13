@@ -2,21 +2,41 @@ import axios from 'axios';
 const baseUrl = 'http://localhost:3001/persons';
 
 const getAll = async () => {
-    const data = await axios.get(baseUrl);
-    return data;
+    try {
+        const res = await axios.get(baseUrl);
+        return res.data;
+    } catch (error) {
+        return false;
+    }
 };
 
-const create = (data) => {
-    return axios.post(baseUrl, data);
+const create = async (data) => {
+    try {
+        console.log(data);
+        const res = await axios.post(`${baseUrl}`, data);
+        return res.data;
+    } catch (error) {
+        return false;
+    }
 };
 
-const update = (id, data) => {
-    return axios.put(`${baseUrl}/${id}`, data);
+const update = async (id, data) => {
+    try {
+        console.log(id, data);
+        const res = await axios.put(`${baseUrl}/${id}`, data);
+        return res;
+    } catch (error) {
+        return false;
+    }
 };
 
 const deletePerson = async (id) => {
-    console.log(id);
-    return await axios.delete(`${baseUrl}/${id}`);
+    try {
+        const data = await axios.delete(`${baseUrl}/${id}`);
+        return data.data;
+    } catch (error) {
+        return false;
+    }
 };
 
 export default {

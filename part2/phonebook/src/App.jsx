@@ -17,8 +17,10 @@ const App = () => {
 
     const getDAta = async () => {
         const res = await phonebookServices.getAll();
-        setPersons(res.data);
-        setFiltPersons(res.data);
+        if (res) {
+            setPersons(res);
+            setFiltPersons(res);
+        }
     };
 
     useEffect(() => {
@@ -34,25 +36,35 @@ const App = () => {
         setNewNumber('');
     };
 
-    const addNew = (event) => {
+    const addNew = async (event) => {
         event.preventDefault();
         const personData = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase());
         if (personData) {
             if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
                 personData.number = newNumber;
-                phonebookServices.update(personData.id, personData);
-                showNotification('success', `Changed number of ${newName}`);
+                let data = await phonebookServices.update(personData.id, personData);
+                if (data) {
+                    showNotification('success', `Changed number of ${newName}`);
+                } else {
+                    showNotification('error', `${newName} has been removed on server`);
+                }
             }
-            return;
+        } else {
+            try {
+                const newList = await phonebookServices.getAll();
+                console.log(newList);
+                let newPersonAdd = { name: newName, number: newNumber, id: `${persons.length + 1}` };
+                newList.push(newPersonAdd);
+                const data = await axios.post('http://localhost:3001/persons', newPersonAdd);
+                if (data) {
+                    setPersons(newList);
+                    setFiltPersons(newList);
+                    showNotification('success', `added ${newName}`);
+                }
+            } catch (error) {
+                showNotification('error', `can not add ${newName}`);
+            }
         }
-        const newList = [...persons];
-        let newPersonAdd = { name: newName, number: newNumber, id: `${persons.length + 1}` };
-        newList.push(newPersonAdd);
-        axios.post('http://localhost:3001/persons', newPersonAdd).then(() => {
-            setPersons(newList);
-            setFiltPersons(newList);
-            showNotification('success', `added ${newName}`);
-        });
     };
 
     const handleNameInput = (event) => {
@@ -69,12 +81,25 @@ const App = () => {
         setFiltPersons(filterList);
     };
 
-    const handleDelete = (event) => {
+    const handleDelete = async (event) => {
         if (window.confirm('Are you sure you want to delete ?')) {
             const id = event.target.dataset.id;
-            phonebookServices.delete(id);
-            getDAta();
-            showNotification('success', 'Deleted successfully');
+            let data = await phonebookServices.delete(id);
+            if (data.id) {
+                setPersons(persons.filter((person) => person.id != id));
+                setFiltPersons(persons.filter((person) => person.id != id));
+                showNotification('success', 'Deleted successfully');
+                return;
+            } else {
+                showNotification(
+                    'error',
+                    `Information of ${
+                        persons.find((person) => {
+                            return person.id === id;
+                        }).name
+                    } has already been remove from server`
+                );
+            }
         }
     };
 
