@@ -25,12 +25,16 @@ const App = () => {
 
     const addNew = (event) => {
         event.preventDefault();
-        if (persons.find((person) => person.name.toLowerCase() === newName.toLowerCase())) {
-            alert(`${newName} is already added to phonebook`);
+        const personData = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase());
+        if (personData) {
+            if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+                personData.number = newNumber;
+                phonebookServices.update(personData.id, personData);
+            }
             return;
         }
         const newList = [...persons];
-        const newPersonAdd = { name: newName, number: newNumber, id: `${persons.length + 1}` };
+        let newPersonAdd = { name: newName, number: newNumber, id: `${persons.length + 1}` };
         newList.push(newPersonAdd);
         axios.post('http://localhost:3001/persons', newPersonAdd).then(() => {
             setPersons(newList);
