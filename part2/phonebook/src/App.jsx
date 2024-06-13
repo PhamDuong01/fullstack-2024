@@ -27,11 +27,14 @@ const App = () => {
             return;
         }
         const newList = [...persons];
-        newList.push({ name: newName, number: newNumber, id: persons.length + 1 });
-        setPersons(newList);
-        setFiltPersons(newList);
-        setNewName('');
-        setNewNumber('');
+        const newPersonAdd = { name: newName, number: newNumber, id: persons.length + 1 };
+        newList.push(newPersonAdd);
+        axios.post('http://localhost:3001/persons', newPersonAdd).then(() => {
+            setPersons(newList);
+            setFiltPersons(newList);
+            setNewName('');
+            setNewNumber('');
+        });
     };
 
     const handleNameInput = (event) => {
