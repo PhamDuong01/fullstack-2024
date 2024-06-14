@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import countriesServices from './countries.js';
-import Information from './Information.jsx';
+import Countries from './Countries.jsx';
 
 function App() {
-    const [countries, setCountries] = useState([]);
+    const [countriesList, setCountriesList] = useState([]);
     const [searchCountry, setSearchCountry] = useState('');
-    const [matchCountry, setMatchCountry] = useState([]);
+    const [matchCountries, setMatchCountries] = useState([]);
 
     useEffect(() => {
         const getAllCountries = async () => {
             const res = await countriesServices.getAll();
             if (res) {
-                setCountries(res);
+                setCountriesList(res);
             }
         };
         getAllCountries();
@@ -19,15 +19,15 @@ function App() {
 
     useEffect(() => {
         if (searchCountry === '') {
-            setMatchCountry([]);
+            setMatchCountries([]);
             return;
         }
         const checkCountry = async (name) => {
-            const result = await countries.filter((country) => {
+            const result = await countriesList.filter((country) => {
                 const countryName = country.name.common.toLowerCase();
                 return countryName.includes(name.toLowerCase());
             });
-            setMatchCountry(result);
+            setMatchCountries(result);
         };
 
         checkCountry(searchCountry);
@@ -42,7 +42,7 @@ function App() {
             <div>
                 find counries <input type='text' onChange={handleSearch} value={searchCountry} />
             </div>
-            <Information countries={matchCountry} />
+            {matchCountries.length > 0 && <Countries countries={matchCountries} />}
         </>
     );
 }
