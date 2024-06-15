@@ -1,6 +1,6 @@
 import express from 'express';
 
-const persons = [
+let persons = [
     {
         id: 1,
         name: 'Arto Hellas',
@@ -21,6 +21,11 @@ const persons = [
         name: 'Mary Poppendieck',
         number: '39-23-6423122',
     },
+    {
+        id: 5,
+        name: 'Duong',
+        number: '39-23-6423122',
+    },
 ];
 
 const app = express();
@@ -37,6 +42,12 @@ app.get('/api/persons/:id', (req, res) => {
     const data = persons.find((person) => person.id === id);
     if (!data) return res.status(404).send('not found');
     return res.json(data);
+});
+
+app.delete('/api/persons/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    persons = persons.filter((person) => person.id !== id);
+    return res.status(204).end();
 });
 
 app.get('/info', (req, res) => {
