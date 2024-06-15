@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Weather from './Weather';
 
 const Info = ({ countryInfo }) => {
     let languages = [];
@@ -28,6 +29,8 @@ const Info = ({ countryInfo }) => {
             <div className='flag'>
                 <img src={countryInfo.flags.png} alt={countryInfo.flags.alt} />
             </div>
+            <h3>Weather in ${countryInfo.name.common}</h3>
+            <Weather latlng={countryInfo.latlng} />
         </div>
     );
 };
@@ -60,7 +63,7 @@ const CountriesInfo = ({ countries }) => {
     return (
         <>
             <h4>{countries[0].name.common}</h4>
-            <Info countryInfo={countries[0]} />;
+            <Info countryInfo={countries[0]} />
         </>
     );
 };

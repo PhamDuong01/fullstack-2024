@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import countriesServices from './countries.js';
+import countriesServices from './services/countries.js';
 import Countries from './Countries.jsx';
 
 function App() {

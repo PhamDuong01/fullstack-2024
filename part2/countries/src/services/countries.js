@@ -3,8 +3,12 @@ import axios from 'axios';
 const baseUrl = 'https://studies.cs.helsinki.fi/restcountries/';
 
 const getAll = async () => {
-    const result = await axios.get(`${baseUrl}/api/all`);
-    return result.data;
+    try {
+        const result = await axios.get(`${baseUrl}/api/all`);
+        return result.data;
+    } catch (e) {
+        console.log(e.message);
+    }
 };
 
 // const get = async (name) => {
