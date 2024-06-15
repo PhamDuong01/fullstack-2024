@@ -32,6 +32,13 @@ app.get('/api/persons', (req, res) => {
     res.status(200).json(persons);
 });
 
+app.get('/api/persons/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const data = persons.find((person) => person.id === id);
+    if (!data) return res.status(404).send('not found');
+    return res.json(data);
+});
+
 app.get('/info', (req, res) => {
     const time = new Date();
     const data = JSON.stringify(`
