@@ -52,8 +52,10 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const id = Math.random() * 10000;
-    const data = req.body;
-    const newPerson = { ...data, id: id };
+    const { name, number } = req.body;
+    if (!name || !number) return res.status(400).json({ error: 'Name or number must not empty' });
+    if (persons.find((person) => person.name === name)) return res.status(400).json({ error: 'name must be unique' });
+    const newPerson = { name: name, number: number, id: id };
 
     persons.push(newPerson);
     return res.status(201).json(newPerson).end();
