@@ -50,6 +50,15 @@ app.delete('/api/persons/:id', (req, res) => {
     return res.status(204).end();
 });
 
+app.post('/api/persons', (req, res) => {
+    const id = Math.random() * 10000;
+    const data = req.body;
+    const newPerson = { ...data, id: id };
+
+    persons.push(newPerson);
+    return res.status(201).json(newPerson).end();
+});
+
 app.get('/info', (req, res) => {
     const time = new Date();
     const data = JSON.stringify(`
