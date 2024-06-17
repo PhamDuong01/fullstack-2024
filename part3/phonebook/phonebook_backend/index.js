@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 
 let persons = [
     {
@@ -32,6 +33,7 @@ let persons = [
 const app = express();
 const PORT = 3001;
 
+app.use(cors());
 app.use(express.json());
 morgan.token('body', (req) => {
     return JSON.stringify(req.body);
@@ -51,12 +53,13 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = parseInt(req.params.id);
+    const person = persons.find((person) => person.id === id);
     persons = persons.filter((person) => person.id !== id);
-    return res.status(204).end();
+    return res.json(person);
 });
 
 app.post('/api/persons', (req, res) => {
-    const id = Math.random() * 10000;
+    const id = Math.floor(Math.random() * 10000);
     const { name, number } = req.body;
     if (!name || !number) return res.status(400).json({ error: 'Name or number must not empty' });
     if (persons.find((person) => person.name === name)) return res.status(400).json({ error: 'name must be unique' });
