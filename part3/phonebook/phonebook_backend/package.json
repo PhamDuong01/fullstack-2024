@@ -6,6 +6,7 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js",
+        "build:ui": "cd ../phoenbook_frontend && npm run build && CP -r dist ../phoenbook_backend",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "type": "module",
