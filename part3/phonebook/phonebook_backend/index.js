@@ -47,8 +47,8 @@ app.delete('/api/persons/:id', async (req, res, next) => {
 app.put('/api/persons/:id', async (req, res, next) => {
     const id = req.params.id;
     const { name, number } = req.body;
-    const updatePerson = { name, number };
-    Phonebook.findByIdAndUpdate({ _id: id }, updatePerson, { new: true })
+    const updatePerson = new Phonebook({ name, number });
+    Phonebook.findByIdAndUpdate({ _id: id }, updatePerson, { new: true, runValidators: true })
         .then((result) => {
             return res.json(result);
         })
@@ -57,15 +57,13 @@ app.put('/api/persons/:id', async (req, res, next) => {
 
 app.post('/api/persons', async (req, res, next) => {
     const { name, number } = req.body;
-    if (!name || !number) return res.status(400).json({ error: 'Name or number must not empty' });
-    Phonebook.find({ name: name })
+    // if (!name || !number) return res.status(400).json({ error: 'Name or number must not empty' });
+    const phonebook = new Phonebook({ name: name, number: number });
+    console.log(phonebook);
+    phonebook
+        .save()
         .then((result) => {
-            if (result.length > 0) {
-                return res.status(400).end();
-            }
-            const newPerson = new Phonebook({ name: name, number: number });
-            newPerson.save();
-            return res.status(201).json(newPerson).end();
+            return res.status(201).json(result).end();
         })
         .catch((err) => next(err));
 });
@@ -91,14 +89,16 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint);
 
 const errorHandler = (err, req, res, next) => {
+    console.log(err.name);
     if (err.name === 'CastError') {
         return res.status(400).send({ error: 'malformatted id' });
+    } else if (err.name === 'ValidationError') {
+        return res.status(400).send({ error: err.message });
     }
 
     next(err);
 };
 
-// this has to be the last loaded middleware, also all the routes should be registered before this!
 app.use(errorHandler);
 
 app.listen(PORT, () => {
