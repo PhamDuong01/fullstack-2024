@@ -1,6 +1,9 @@
 import express from 'express';
+
 import morgan from 'morgan';
+
 import cors from 'cors';
+
 import 'dotenv/config';
 
 import Phonebook from './models/phonebook.js';
@@ -30,7 +33,7 @@ app.get('/api/persons/:id', async (req, res, next) => {
             if (result.length > 0) {
                 return res.json(result);
             }
-            return res.json({ message: `Person is not exist on server` });
+            return res.json({ message: 'Person is not exist on server' });
         })
         .catch((err) => next(err));
 });
@@ -70,9 +73,7 @@ app.post('/api/persons', async (req, res, next) => {
 
 app.get('/info', (req, res) => {
     const time = new Date();
-    const data = JSON.stringify(`
-        ${Date.now().toLocaleString()}
-        `);
+
     Phonebook.find({}).then((result) => {
         return res.status(200).send(`
             <div>
