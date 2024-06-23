@@ -37,4 +37,25 @@ export const authorMoreBlog = (blogs) => {
     return mostBlogAuthor;
 };
 
-export default { totalLikes, favoriteBlog, authorMoreBlog };
+export const authorMoreLike = (blogs) => {
+    const refList = {};
+    let mostLikeAuthor = { author: '', likes: 0 };
+    blogs.forEach((blog) => {
+        if (refList[blog.author]) {
+            refList[blog.author].likes += blog.likes;
+        } else {
+            let newAuthor = { author: blog.author, likes: blog.likes };
+            refList[blog.author] = newAuthor;
+        }
+    });
+
+    for (const author in refList) {
+        if (refList[author].likes > mostLikeAuthor.likes) {
+            mostLikeAuthor = refList[author];
+        }
+    }
+
+    return mostLikeAuthor;
+};
+
+export default { totalLikes, favoriteBlog, authorMoreBlog, authorMoreLike };
