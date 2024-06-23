@@ -16,4 +16,25 @@ export const favoriteBlog = (blogs) => {
     return result;
 };
 
-export default { totalLikes, favoriteBlog };
+export const authorMoreBlog = (blogs) => {
+    const refList = {};
+    let mostBlogAuthor = { author: '', blogs: 0 };
+    blogs.forEach((blog) => {
+        if (refList[blog.author]) {
+            refList[blog.author].blogs += 1;
+        } else {
+            let newAuthor = { author: blog.author, blogs: 1 };
+            refList[blog.author] = newAuthor;
+        }
+    });
+
+    for (const author in refList) {
+        if (refList[author].blogs > mostBlogAuthor.blogs) {
+            mostBlogAuthor = refList[author];
+        }
+    }
+
+    return mostBlogAuthor;
+};
+
+export default { totalLikes, favoriteBlog, authorMoreBlog };
