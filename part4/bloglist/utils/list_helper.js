@@ -6,4 +6,14 @@ export const totalLikes = (blogs) => {
     }, 0);
 };
 
-export default { totalLikes };
+export const favoriteBlog = (blogs) => {
+    const mostLikeBlog = blogs.sort((a, b) => b.likes - a.likes)[0];
+    const result = {
+        title: mostLikeBlog.title,
+        author: mostLikeBlog.author,
+        likes: mostLikeBlog.likes,
+    };
+    return result;
+};
+
+export default { totalLikes, favoriteBlog };
